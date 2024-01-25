@@ -1,0 +1,84 @@
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES-USER: airflow
+      POSTGRES-PASSWORD: airflow
+      POSTGRES-DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg-isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+    restart: always
+
+
+winpty docker run -it \
+  -e POSTGRES_USER="root" \
+  -e POSTGRES_PASSWORD="root" \
+  -e POSTGRES_DB="ny_taxi" \
+  -v //c/Users/Matvei_Roshchin/Desktop/2_docker_sql/ny_taxi_postgres_data:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  postgres:13
+
+
+winpty pgcli -h localhost -p 5432 -u root -d ny_taxi
+
+C:\Users\Matvei_Roshchin\AppData\Local\Programs\Python\Python39-32
+C:\Users\Matvei_Roshchin\AppData\Local\Programs\Python\Python39-32\Lib\site-packages\pgcli
+
+cd desktop/2_docker_sql
+
+winpty docker run -it \
+  docker run -it \
+  -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+  -e PGADMIN_DEFAULT_PASSWORD="root" \
+  -p 8080:80 \
+  dpage/pgadmin4
+
+
+## Network для запуска контейнера и постгреса с помощью связи
+## 1 step
+docker network create pg-network
+## 2 step
+winpty docker run -it \
+  -e POSTGRES_USER="root" \
+  -e POSTGRES_PASSWORD="root" \
+  -e POSTGRES_DB="ny_taxi" \
+  -v //c/Users/Matvei_Roshchin/Desktop/2_docker_sql/ny_taxi_postgres_data:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  --network=pg-network \
+  --name pg-database \
+  postgres:13
+  ## 3 step different gitbash
+winpty docker run -it \
+  -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+  -e PGADMIN_DEFAULT_PASSWORD="root" \
+  -p 8080:80 \
+  --network=pg-network \
+  --name pgadmin \
+  dpage/pgadmin4
+
+
+  Что касается вашего вопроса о перезапуске компьютера: вам не нужно каждый раз повторять весь процесс с нуля. Вот несколько ключевых моментов, которые помогут вам:
+
+Создание Сети Docker: Команда docker network create pg-network создает сеть. 
+Эта сеть остается доступной после перезагрузки, поэтому вам не нужно создавать ее снова. 
+Вы можете проверить существующие сети командой docker network ls.
+
+Запуск Контейнеров: После перезагрузки вам нужно будет перезапустить ваши контейнеры (PostgreSQL и pgAdmin), 
+но не обязательно пересоздавать их с нуля. Если контейнеры были остановлены, используйте команду docker start <container_name> 
+для их запуска. Например, docker start pg-database и docker start pgadmin.
+
+Данные в PostgreSQL: Так как вы используете том (-v), данные в PostgreSQL сохраняются между перезапусками контейнера. 
+Это означает, что ваши данные в базе данных остаются нетронутыми, даже если контейнер будет остановлен и запущен снова.
+
+Автозапуск Контейнеров: Если вы хотите, чтобы ваши контейнеры автоматически запускались при старте Docker, 
+можно использовать опцию --restart в команде docker run. Например, добавление --restart always заставит Docker 
+автоматически перезапускать контейнер при его остановке (в том числе и при перезагрузке системы).
+
+Таким образом, после первоначальной настройки и создания контейнеров, вам просто нужно будет запускать контейнеры после 
+перезагрузки, если они не настроены на автозапуск.
+
+
