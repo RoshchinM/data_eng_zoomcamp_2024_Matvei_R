@@ -1,25 +1,22 @@
 terraform {
   required_providers {
     google = {
-      source = "hashicorp/google"
+      source  = "hashicorp/google"
       version = "5.13.0"
     }
   }
 }
 
 provider "google" {
-    credentials = "./keys/my-creds.json"
-  project     = "aqueous-radio-411522"
-  region      = "us-central1"
-  }
+  credentials = file(var.credentials)
+  project     = var.Project
+  region      = var.region
+}
 
-
-  resource "google_storage_bucket" "demo-bucket" {
-  name          = "aqueous-radio-411522-terra-bucket"
-  location      = "US"
+resource "google_storage_bucket" "demo-bucket" {
+  name          = var.gcs_bucket_name
+  location      = var.location
   force_destroy = true
-
-
 
   lifecycle_rule {
     condition {
@@ -29,4 +26,10 @@ provider "google" {
       type = "AbortIncompleteMultipartUpload"
     }
   }
+}
+
+resource "google_bigquery_dataset" "demo_dataset" {
+  dataset_id = var.bq_dataset_name
+  location   = var.location
+
 }

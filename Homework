@@ -1,0 +1,59 @@
+###Q1 
+1) rm
+
+###Q2
+EPAM+Matvei_Roshchin@XPUZTASW0041 MINGW64 ~/desktop/2_docker_sql (main)
+$ winpty docker run -it --entrypoint=bash python:3.9
+root@a858e20634ba:/# pip list
+Package    Version
+---------- -------
+pip        23.0.1
+setuptools 58.1.0
+wheel      0.42.0
+
+###Q3
+SELECT count(1) FROM public.green_taxi_data
+where date(lpep_dropoff_datetime) = '2019-09-18'
+and date(lpep_pickup_datetime) = '2019-09-18'
+3) 15612
+
+###Q4
+select lpep_pickup_datetime, trip_distance from public.green_taxi_data
+order by 2 desc
+limit 1
+4)2019-09-26 19:32:52
+
+###Q5
+Three biggest pick up Boroughs
+Consider lpep_pickup_datetime in '2019-09-18' and ignoring Borough has Unknown
+Which were the 3 pick up Boroughs that had a sum of total_amount superior to 50000?
+"Brooklyn" "Manhattan" "Queens"
+"Bronx" "Brooklyn" "Manhattan"
+"Bronx" "Manhattan" "Queens"
+"Brooklyn" "Queens" "Staten Island"
+
+Select z."Borough", sum(total_amount)
+FROM public.green_taxi_data t
+left join zones z on z."LocationID" = t."PULocationID"
+where date(lpep_pickup_datetime) = '2019-09-18'
+GROUP by 1
+ORDER by 2 desc
+limit 3
+5) "Brooklyn" "Manhattan" "Queens"
+
+q6 For the passengers picked up in September 2019 in the zone name Astoria which was the 
+drop off zone that had the largest tip? We want the name of the zone, not the id.
+Note: it's not a typo, it's tip , not trip
+Central Park
+Jamaica
+JFK Airport
+Long Island City/Queens Plaza
+
+Select *
+FROM public.green_taxi_data t
+left join zones z on z."LocationID" = t."PULocationID"
+left join zones z1 on z1."LocationID" = t."DOLocationID"
+where z."Zone" = 'Astoria'
+ORDER by tip_amount desc
+limit 1
+JFK Airport
