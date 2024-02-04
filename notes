@@ -1,6 +1,0 @@
-1) скопировал ветку
-2) запустил докер docker compose build - создал его билд
-3) для апдейта мейджа docker pull mageai/mageai:latest
-4) docker compose up запуск
-5)Now, navigate to http://localhost:6789 in your browser! Voila! You're ready to get started with the course.
-
