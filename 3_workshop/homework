@@ -1,0 +1,116 @@
+Question 1: What is the sum of the outputs of the generator for limit = 5?
+A: 10.23433234744176
+B: 7.892332347441762
+C: 8.382332347441762 <<<<
+D: 9.123332347441762
+Question 2: What is the 13th number yielded by the generator?
+A: 4.236551275463989
+B: 3.605551275463989 <<<
+C: 2.345551275463989
+D: 5.678551275463989
+Question 3: Append the 2 generators. After correctly appending the data, calculate the sum of all ages of people.
+A: 353 <<<
+B: 365
+C: 378
+D: 390
+Question 4: Merge the 2 generators using the ID column. Calculate the sum of ages of all the people loaded as described above.
+A: 205
+B: 213 <<<
+C: 221
+D: 230
+
+
+1-2 
+def square_root_generator(limit):
+    n = 1
+    while n <= limit:
+        yield n ** 0.5
+        n += 1
+
+# Example usage:
+limit = 5
+generator = square_root_generator(limit)
+
+for sqrt_value in generator:
+    print(sqrt_value)
+
+limit = 5
+generator = square_root_generator(limit)
+
+sum_of_outputs = sum(generator)
+print("Sum of outputs:", sum_of_outputs)
+
+
+limit = 13
+generator = square_root_generator(limit)
+
+for _ in range(13):
+    sqrt_value = next(generator)
+
+print("13th number yielded:", sqrt_value)
+
+
+
+3-4
+import duckdb
+import pandas as pd
+
+# Create a connection to duckdb
+con = duckdb.connect(database=':memory:', read_only=False)
+
+# Load the first generator
+people_data_1 = list(people_1())
+
+# Convert data to a DataFrame
+df_1 = pd.DataFrame(people_data_1)
+
+# Load the DataFrame to duckdb
+df_1.to_sql("people_table", con, index=False)
+
+# Calculate the sum of ages for the first set of people
+sum_ages_1 = con.execute("SELECT SUM(Age) FROM people_table").fetchone()[0]
+
+print(f"Sum of ages for the first set of people: {sum_ages_1}")
+
+# Load the second generator
+people_data_2 = list(people_2())
+
+# Convert data to a DataFrame (excluding "Occupation" column)
+df_2 = pd.DataFrame(people_data_2, columns=["ID", "Name", "Age", "City"])
+
+# Append the second set of people to the existing table
+df_2.to_sql("people_table", con, if_exists="append", index=False)
+
+# Calculate the sum of ages for all people
+sum_ages_all = con.execute("SELECT SUM(Age) FROM people_table").fetchone()[0]
+
+print(f"Sum of ages for all people after appending: {sum_ages_all}")
+
+
+
+
+4 
+import duckdb
+import pandas as pd
+
+# Create a connection to duckdb
+con = duckdb.connect(database=':memory:', read_only=False)
+
+# Load the first generator
+people_data_1 = list(people_1())
+df_1 = pd.DataFrame(people_data_1)
+
+# Load the DataFrame to duckdb with primary key ID
+df_1.to_sql("people_table", con, index=False, if_exists="replace", dtype={"ID": "INTEGER PRIMARY KEY"})
+
+# Load the second generator with overlapping IDs
+people_data_2 = list(people_2())
+df_2 = pd.DataFrame(people_data_2)
+
+# Merge the second set of people with the existing table, replacing overlapping records
+df_2.to_sql("people_table", con, if_exists="replace", index=False, method="multi", dtype={"ID": "INTEGER PRIMARY KEY"})
+
+# Calculate the sum of ages for all people
+sum_ages_all = con.execute("SELECT SUM(Age) FROM people_table").fetchone()[0]
+
+print(f"Sum of ages for all people after merging: {sum_ages_all}")
