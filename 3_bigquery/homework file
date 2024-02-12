@@ -1,0 +1,222 @@
+doing it with mage
+
+1) data loader 
+import io
+import pandas as pd
+import requests
+if 'data_loader' not in globals():
+    from mage_ai.data_preparation.decorators import data_loader
+if 'test' not in globals():
+    from mage_ai.data_preparation.decorators import test
+
+
+if 'data_loader' not in globals():
+    from mage_ai.data_preparation.decorators import data_loader
+if 'test' not in globals():
+    from mage_ai.data_preparation.decorators import test
+
+
+@data_loader
+def load_data(*args, **kwargs):
+
+    urls = ['https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2022-01.parquet',
+            'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2022-02.parquet',
+            'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2022-03.parquet',
+            'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2022-04.parquet',
+            'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2022-05.parquet',
+            'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2022-06.parquet',
+            'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2022-07.parquet',
+            'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2022-08.parquet',
+            'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2022-09.parquet',
+            'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2022-10.parquet',
+            'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2022-11.parquet',
+            'https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2022-12.parquet'
+            ]
+
+    taxi_dtypes = {
+                'VendorID': pd.Int64Dtype(),
+                'passenger_count': pd.Int64Dtype(),
+                'trip_distance': float,
+                'RatecodeID': pd.Int64Dtype(),
+                'store_and_fwd_flag': str,
+                'PULocationID':pd.Int64Dtype(),
+                'DOLocationID':pd.Int64Dtype(),
+                'payment_type': pd.Int64Dtype(),
+                'fare_amount': float,
+                'extra':float,
+                'mta_tax':float,
+                'tip_amount':float,
+                'tolls_amount':float,
+                'improvement_surcharge':float,
+                'total_amount':float,
+                'congestion_surcharge':float
+    }
+
+    parse_dates = ['lpep_pickup_datetime', 'lpep_dropoff_datetime']
+
+    dfs = []
+    for url in urls:
+        df = pd.read_parquet(url)
+        dfs.append(df)
+
+    return pd.concat(dfs, ignore_index=True)
+
+@test
+def test_output(output, *args) -> None:
+    """
+    Template code for testing the output of the block.
+    """
+    assert output is not None, 'The output is undefined'
+
+
+2) data transformation
+if 'transformer' not in globals():
+    from mage_ai.data_preparation.decorators import transformer
+if 'test' not in globals():
+    from mage_ai.data_preparation.decorators import test
+
+
+@transformer
+def transform(data, *args, **kwargs):
+# 1 фильтр на каунт пассажиров
+    print("Rows with zero passengers:",data['passenger_count'].isin([0]).sum())
+
+# 2 фильтр на снейккейс
+    data.columns = (data.columns
+                    .str.replace(' ', '_')
+                    .str.lower()
+    )
+# 3 изменение на новую колонку с датой
+    data['lpep_pickup_date']=data['lpep_pickup_datetime'].dt.date
+
+
+# 4 фильтр на трип дистанс
+    data = data[data['trip_distance'] > 0]
+
+    return data[data['passenger_count']>0]
+
+@test
+def test_output(output, *args) -> None:
+    """
+    Template code for testing the output of the block.
+    """
+    assert output is not None, 'The output is undefined'
+    
+        # Print column names
+    #print("Column Names:", output.columns)
+    
+    valid_vendor_ids = [1, 2]  # Замените на реальные существующие значения
+    assert all(output['vendorid'].isin(valid_vendor_ids)), 'Invalid vendor_id values'
+
+    assert (output['passenger_count'] > 0).all(), 'passenger_count should be greater than 0'
+    assert (output['trip_distance'] > 0).all(), 'trip_distance should be greater than 0'
+ 
+
+3) data exporter
+
+from mage_ai.settings.repo import get_repo_path
+from mage_ai.io.config import ConfigFileLoader
+from mage_ai.io.google_cloud_storage import GoogleCloudStorage
+from pandas import DataFrame
+from os import path
+
+if 'data_exporter' not in globals():
+    from mage_ai.data_preparation.decorators import data_exporter
+
+
+@data_exporter
+def export_data_to_google_cloud_storage(df: DataFrame, **kwargs) -> None:
+    """
+    Template for exporting data to a Google Cloud Storage bucket.
+    Specify your configuration settings in 'io_config.yaml'.
+
+    Docs: https://docs.mage.ai/design/data-loading#googlecloudstorage
+    """
+    config_path = path.join(get_repo_path(), 'io_config.yaml')
+    config_profile = 'default'
+
+    bucket_name = 'mage-zoompamp-matvei-roshchin'
+    object_key = 'green_taxi_2022hw.parquet'
+
+    GoogleCloudStorage.with_config(ConfigFileLoader(config_path, config_profile)).export(
+        df,
+        bucket_name,
+        object_key,
+    )
+
+
+4) data load to gcp check
+
+checked that bucket exits
+
+5) go to bigquery
+create new data set
+add from browse correct bucket_name
+
+6) hw
+
+Question 1: What is count of records for the 2022 Green Taxi Data??
+
+65,623,481
+840,402 <<<
+1,936,423
+253,647
+
+Question 2:
+Write a query to count the distinct number of PULocationIDs for the entire dataset on both the tables.
+What is the estimated amount of data that will be read when this query is executed on the External Table and the Table?
+
+0 MB for the External Table and 6.41MB for the Materialized Table  <<<< Bytes processed
+6.41 MB
+18.82 MB for the External Table and 47.60 MB for the Materialized Table
+0 MB for the External Table and 0MB for the Materialized Table
+2.14 MB for the External Table and 0MB for the Materialized Table
+    
+
+Question 3:
+How many records have a fare_amount of 0?
+
+12,488
+128,219
+112
+1,622 <<<
+1 – 50 of 1622
+
+
+Question 4:
+What is the best strategy to make an optimized table in Big Query if your query will always order the results by PUlocationID and filter based on lpep_pickup_datetime? (Create a new table with this strategy)
+
+Cluster on lpep_pickup_datetime Partition by PUlocationID
+Partition by lpep_pickup_datetime Cluster on PUlocationID <<<<
+Partition by lpep_pickup_datetime and Partition by PUlocationID
+Cluster on by lpep_pickup_datetime and Cluster on PUlocationID
+
+CREATE TABLE green_taxi_2022_hw.optimized_green_taxi
+PARTITION BY DATE(lpep_pickup_datetime)
+CLUSTER BY PUlocationID
+AS
+SELECT *
+FROM `green_taxi_2022_hw.green_taxi_trips_2022`;
+
+
+Question 5:
+Write a query to retrieve the distinct PULocationID between lpep_pickup_datetime 06/01/2022 and 06/30/2022 (inclusive)
+
+Use the materialized table you created earlier in your from clause and note the estimated bytes. Now change the table in the from clause to the partitioned table you created for question 4 and note the estimated bytes processed. What are these values?
+
+Choose the answer which most closely matches.
+
+22.82 MB for non-partitioned table and 647.87 MB for the partitioned table
+12.82 MB for non-partitioned table and 1.12 MB for the partitioned table
+5.63 MB for non-partitioned table and 0 MB for the partitioned table
+10.31 MB for non-partitioned table and 10.31 MB for the partitioned table
+
+SELECT distinct pulocationid  FROM `taxy-rides-ny-412222.green_taxi_2022_hw.taxi_green_2022_hw` 
+WHERE DATE(lpep_pickup_datetime) BETWEEN '2022-06-01' AND '2022-06-30';
+12.82mb
+
+SELECT distinct pulocationid  FROM `taxy-rides-ny-412222.green_taxi_2022_hw.optimized_green_taxi` 
+WHERE DATE(lpep_pickup_datetime) BETWEEN '2022-06-01' AND '2022-06-30';
+
+Bytes processed
+1.12 MB
