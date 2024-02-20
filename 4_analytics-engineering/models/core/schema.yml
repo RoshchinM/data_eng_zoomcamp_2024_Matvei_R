@@ -15,7 +15,12 @@ models:
       - name: tripid
         data_type: string
         description: "unique identifier conformed by the combination of vendorid and pickyp time"
-
+  - name: fhv_fact_trips
+    description: >
+      FHV trips
+      The table contains records where both pickup and dropoff locations are valid and known zones. 
+      Each record corresponds to a trip uniquely identified by tripid. 
+  
   - name: dm_monthly_zone_revenue
     description: >
       Aggregated table of all taxi trips corresponding to both service zones (Green and yellow) per pickup zone, month and service.
