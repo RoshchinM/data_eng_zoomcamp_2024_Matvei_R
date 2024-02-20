@@ -1,4 +1,4 @@
-version: 2
+_version: 2
 
 sources:
   - name: staging
@@ -8,6 +8,7 @@ sources:
     tables:
       - name: green_tripdata
       - name: yellow_tripdata
+      - name: FHV_rides_actual
 
 models:
   - name: stg_green_tripdata
