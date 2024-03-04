@@ -1,0 +1,12 @@
+# .gitignore
+
+# Игнорирование файлов terraform-provider-google_v5.13.0_x5.exe и 24585
+fhvhv_tripdata_2021-01.csv
+fhvhv_tripdata_2021-01.parquet
+gsc-connector-hadoop3-2.2.5.jar
+fhv_tripdata_2019-10.csv
+data/base/pq
+data/base/raw
+5_batching/data/raw/yellow/2020/01/yellow_tripdata_2020-01.csv.gz
+5_batching/data/raw/yellow/2020/02/yellow_tripdata_2020-02.csv.gz
+5_batching/data/raw/yellow/2020/02/yellow_tripdata_2020-03.csv.gz

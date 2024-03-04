@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "taxy-rides-ny-412222",
+  "private_key_id": "0b52b522e0b6191b75ee90cd5b79cddccba3fdc4",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCotqw+Yo58FiVj\nCQUuuohusOgZdJkG4T6OCUNELU4a20YGpSCtXrubEWA8HDh7qz+J5yWeUd6fTwZ8\nPuLl6KzA+g3mJZ5qxujtK6A0QGuw7OTeGvtEO+kYRtKKQ4hzDbJCJG8EhYftoehC\nocVtCZb73v6GSrWq3GPAYBOwJVveU90p/XagC61MFtn9Gb5jpOmmTr92rPGZwUK7\nVEdTYa0HJ2N+ksxuU4q9Qn8zin89nQSOlOAXNsvt7J457VkWBTRplCPDccZWz01C\nhrh2uk1gOaqsJPAkn5r0EqgkMJU1G0Uf0GyeLXe3DeCayNKybZK5Tt2tpazRF1V0\nb0m9swgPAgMBAAECggEAAg02AiAzgmQQZc+6PmFn5sFN3fVGe1CaP36j2pYAgPcn\nchlKxwZFWRgiaJsuUulv0CIuppf7F/U0zEpzRjWhVMgjmy5SSdgDr7hJChwV7Jn2\nGX8TeT1UPblpNpTarg1WTblLixTDe8BCj7vX7KGYUzmQlvHUqHvi/dPCmfDOdovf\nJ0ECK+RmYarLsUCICjRS2ciTs6msJlodNkUFUXqPnoxOGv52hla0fG/KvC3Brk0O\npB0OFNimFgid4xXO7QsBLIJm0IRJ0zhPjzOcEh89eY1+Mg47dW/zd3gZFp0zHV1k\n/aHoZBse41WHt8hYFsm+/04fEBKLR6rm+VgbdHODsQKBgQDfdfxi4shdufaLLwfy\nJHHoIW5YC9zI8cNXLlUieCw99zybMG148NrqOxEY0+12xHnJBfOJg5Z0VbYyTbHz\nN1ZEDr4sbztxiSRhAtKrJ5MHXDLC/aNcM6I5gg5FmGUoU8uJhFmHbKmGgzANolDQ\nu6ARXfaJOqWEMmWbWgw66afdhwKBgQDBR9sX8nf6W9LLJRt4/HUDKjYbFhhpjWTH\nMeh4KB6BNqL9HMyd3SnmlscCzZgzwRPOwarFtgr8ZxpaKWVG9NqOTGS7sI1QjgV9\nFq4y68uCBQR5RprSicUB9Lj/fK/YjE+9/taFsczHpsOEL7lsH6ShYWkDpOZ8y5c8\n8Zs/C/zjOQKBgHHzrLyQgTSqfDsFxLuKMjv5sFdd1TzzbHWsvuVQ+t6ukU1iKLEf\nwcLoVBOhHtsN3jzQuBxL6hFxE/QbAr/QXEFgc0Idhuai1NZTpjJ5f9SlA43D4eZG\nvlctJzH+QLeL46NAxpb0po5dn8eUGjoXM80naW0ZZwY+3OmXxdzVAjFJAoGAd/I+\n3mKj4GPhsh4qKXAKsdcdUrvolICh3Rh02zSSkb+1cHzR4togqbBCetPaM6wLvdDk\nSORLdw4JBZEQ//LuO0bfcLcFS8uHTnSn0IQSfHLeruCJLkU/VJJpyGu5uRqCVjdz\nK+8GVZSBW2Q+nwIYKeqIwDEytJmoFrMdlAe9fckCgYA2nXvq8YRq1fP7W6Ga+3cQ\nsOcOHXTIPz6wcVpxnGCTw0PEduq54KPXl0h1P4bFaPVgoInbKBOW+tZUrKMjK+wO\nk3GtxhVjG8M6E12thnniRKEsvkXiOE9XGebEnaLASEPdI46cqemPaJpyCIawXJ40\ndadK7dm2qdZL5uBL/s8fDA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "mage-zoomcamp@taxy-rides-ny-412222.iam.gserviceaccount.com",
+  "client_id": "100073809687130362303",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/mage-zoomcamp%40taxy-rides-ny-412222.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
